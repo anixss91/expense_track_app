@@ -17,15 +17,15 @@ class DataBaseHelper {
     _db = await openDatabase(
       path,
 
-      version: 1,
+      version: 3,
       onCreate: (db, version) async {
         //create the table
         await db.execute(
-          'CREATE TABLE expanses('
-          'id INTEGER PRIMARY KEY ,'
-          'amount REAL,'
-          'category TEXT,'
-          'date TEXT'
+          'CREATE TABLE expenses('
+          'id INTEGER PRIMARY KEY AUTOINCREMENT,'
+          'amount REAL NOT NULL,'
+          'type TEXT NOT NULL,'
+          'date TEXT NOT NULL,'
           '),',
         );
       },

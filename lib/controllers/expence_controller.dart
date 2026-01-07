@@ -10,9 +10,10 @@ class ExpenceController extends GetxController {
     loadExpenses();
   }
 
-  void addExpense(TransactionModel expense) {
-    DataBaseHelper.insertExpense(expense);
+  void addExpense(TransactionModel expense) async {
+    await DataBaseHelper.insertExpense(expense);
     loadExpenses();
+    update();
   }
 
   void loadExpenses() async {
@@ -20,10 +21,10 @@ class ExpenceController extends GetxController {
   }
 
   //compute total balance(income - expenses)
-  double get totalBalance => totalIncome - totalEpenses;
+  double get totalBalance => totalIncome - totalExpenses;
 
   //compute total Expenses
-  double get totalEpenses => expenses
+  double get totalExpenses => expenses
       .where((e) => e.type == 'expense')
       .fold(0, (sum, e) => sum + e.amount);
 
@@ -46,7 +47,7 @@ class ExpenceController extends GetxController {
     return expenses
         .where(
           (e) =>
-              e.type == 'expenses' &&
+              e.type == 'expense' &&
               e.date.year == now.year &&
               e.date.month == now.month,
         )

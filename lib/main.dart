@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import './screens/home_screen.dart';
+import './screens/add_transaction_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
       getPages: [
         GetPage(name: '/home', page: () => HomeScreen()),
 
-        // GetPage(name: '/Add' ,page: => AddTransactionScreen),
+        GetPage(name: '/Add', page: () => AddTransactionScreen()),
       ],
     );
   }

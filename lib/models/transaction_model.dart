@@ -1,5 +1,3 @@
-import 'package:intl/intl.dart';
-
 class TransactionModel {
   int? id;
   double amount;
@@ -7,7 +5,7 @@ class TransactionModel {
   DateTime date;
   String type;
   TransactionModel({
-    required this.id,
+    this.id,
     required this.amount,
     required this.category,
     required this.date,
