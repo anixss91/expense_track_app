@@ -8,9 +8,9 @@ class DataBaseHelper {
 
   static Future<Database> getDatabase() async {
     if (_db != null) return _db!;
-    
+
     final path = join(await getDatabasesPath(), 'expenses.db');
-    
+
     _db = await openDatabase(
       path,
       version: 4,
@@ -27,7 +27,9 @@ class DataBaseHelper {
       },
       onUpgrade: (db, oldVersion, newVersion) async {
         if (oldVersion < 4) {
-          await db.execute('ALTER TABLE expenses ADD COLUMN category TEXT DEFAULT "General"');
+          await db.execute(
+            'ALTER TABLE expenses ADD COLUMN category TEXT DEFAULT "General"',
+          );
         }
       },
     );
