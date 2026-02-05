@@ -1,51 +1,49 @@
 import 'package:flutter/rendering.dart';
-
 import '../models/transaction_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DataBaseHelper {
-  static Database?
-  _db; //static means shared by ther whole app and _means private variale(singleton db)
+  static Database? _db;
 
-  //getter method to access the db
   static Future<Database> getDatabase() async {
-    if (_db != null) return _db!; //! means sure its not null
-    //get the database path
-    final path = join(await getDatabasesPath(), 'expenses.db' /*file Name*/);
-    //create the db
+    if (_db != null) return _db!;
+    
+    final path = join(await getDatabasesPath(), 'expenses.db');
+    
     _db = await openDatabase(
       path,
-
-      version: 3,
+      version: 4,
       onCreate: (db, version) async {
-        //create the table
         await db.execute(
           'CREATE TABLE expenses('
-          'id INTEGER PRIMARY KEY AUTOINCREMENT,'
-          'amount REAL NOT NULL,'
-          'type TEXT NOT NULL,'
-          'date TEXT NOT NULL,'
-          '),',
+          'id INTEGER PRIMARY KEY AUTOINCREMENT, '
+          'amount REAL NOT NULL, '
+          'category TEXT NOT NULL, '
+          'type TEXT NOT NULL, '
+          'date TEXT NOT NULL'
+          ')',
         );
+      },
+      onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < 4) {
+          await db.execute('ALTER TABLE expenses ADD COLUMN category TEXT DEFAULT "General"');
+        }
       },
     );
     return _db!;
   }
 
-  //insert expence
   static Future<bool> insertExpense(TransactionModel expense) async {
     try {
       final db = await getDatabase();
       await db.insert('expenses', expense.toMap());
       return true;
     } catch (e) {
-      debugPrint('Insert failed :$e');
+      debugPrint('Insert failed: $e');
       return false;
     }
   }
-
-  //get Expence
 
   static Future<List<TransactionModel>> getALLexpences() async {
     try {
@@ -53,7 +51,7 @@ class DataBaseHelper {
       final maps = await db.query('expenses');
       return maps.map((e) => TransactionModel.fromMap(e)).toList();
     } catch (e) {
-      debugPrint('Read failed : $e');
+      debugPrint('Read failed: $e');
       return [];
     }
   }
